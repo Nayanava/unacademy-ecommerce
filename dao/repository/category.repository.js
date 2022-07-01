@@ -1,3 +1,11 @@
+/*
+
+    Homework: Fetch a category by its name
+    Sample example:
+    https://stackoverflow.com/questions/59111392/using-findbypk-and-where-condition-in-sequelize
+
+*/
+
 const dbConnection = require("./dbConnection");
 const defineCategory = require("../models/category.model");
 const { connection } = require("./dbConnection");
@@ -12,6 +20,7 @@ const Category = defineCategory(dbConnection.connection, dbConnection.DataTypes)
 const createCategoryTable = async (forceCreation) => {
     await Category.sync({force: forceCreation})
 }
+
 //function to create a new row in the Category table
 const save = async (category) => {
     return await Category.create({

@@ -1,20 +1,25 @@
 const express = require('express');
 const app = express();
 const serverConfig = require('./configs/server.config');
+const { initializeTables } = require('./dao/repository/tableInitializers');
 const { createRoutes } = require('./routes/parentRouter');
 const bodyParser = require('body-parser');
-const {initializeTables} = require("./dao/repository/tableCreation.repository")
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.get("/", (req, res) => {
+    res.send({message: "Welcome to our e-commerce Platform!"});
+})
 app.listen(serverConfig.PORT, serverConfig.HOST, () => {
     console.log(`Server is listening on ${serverConfig.HOST}:${serverConfig.PORT}`);
 });
 
+//IIFE - immediately invoked function expression!
 (() => {
-    if(serverConfig.env !== 'PROD') {
-        initializeTables();
-    }
+    //1. configure the routers
     createRoutes(app);
+    //2. Initialize the databases if environment is development
+    if(serverConfig.ENV === 'dev') {
+        initializeTables(false);
+    }
 })();
