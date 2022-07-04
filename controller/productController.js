@@ -1,5 +1,6 @@
 const productRepository = require("../dao/repository/product.repository");
 const errorConstants = require("../constants/errorConstants")
+const { Op } = require("sequelize");
 const createProduct = (req, res) => {
     //1. name should not be null
     //2. categoryId should not be null
@@ -11,6 +12,7 @@ const createProduct = (req, res) => {
        });
        return;
     }
+
     productRepository.createProduct({
         name: body.name,
         description: body.description,
@@ -47,6 +49,59 @@ const createProduct = (req, res) => {
     })
 }
 
+
+//1. fetch product by name
+const fetchProuctsByName = (req, res) => {
+    productRepository.fetchProductsByCriteria({
+        where: {
+            name: req.params.name
+        }
+    }).then(result =>  res.status(200).send(result))
+    .catch(err => {
+        //console.log
+        res.status(500)
+        .send({message: 'Error occured in proccessing the request, Please try again after sometime!'})
+    });
+}
+
+//2. fetch product by categoryId
+const fetchProuctsByCategoryId = (req, res) => {
+    let crtieria;
+    const minPrice = req.query.minPrice;
+    const maxPrice = req.query.maxPrice;
+    if(minPrice && maxPrice) {
+        criteria = {
+            where: {
+                [Op.and]: [
+                    {
+                        categoryId: req.params.categoryId
+                    },
+                    {
+                        price: {
+                            [Op.between]: [minPrice, maxPrice]
+                        }
+                    }
+                ]
+            },
+            order: [['price', 'ASC']]
+        }
+    } else {
+        criteria = {
+            where: {
+                categoryId: req.params.categoryId
+            }
+        }
+    }
+    productRepository.fetchProductsByCriteria(criteria)
+    .then(result =>  res.status(200).send(result))
+    .catch(err => {
+        //console.log
+        res.status(500)
+        .send({message: 'Error occured in proccessing the request, Please try again after sometime!'})
+    });
+}
 module.exports = {
-    createProduct: createProduct
+    createProduct: createProduct,
+    fetchProuctsByName: fetchProuctsByName,
+    fetchProuctsByCategoryId: fetchProuctsByCategoryId
 }

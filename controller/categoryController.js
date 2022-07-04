@@ -1,7 +1,7 @@
 const res = require('express/lib/response');
 const categoryRepository = require('../dao/repository/category.repository');
 const errorConstants = require("../constants/errorConstants")
-const createCategory = (req, res) => {
+const addCategory = (req, res) => {
     const body = req.body;
     //name -> nonNull, description -> may or may not be present
     if(!body.name) {
@@ -10,7 +10,7 @@ const createCategory = (req, res) => {
         })
         return;
     }
-    categoryRepository.createCategory({
+    categoryRepository.addCategory({
         name: body.name,
         description: body.description
     }).then(result => {
@@ -42,7 +42,7 @@ const fetchAllCategories = (req, res) => {
         console.log(error.message);
         res.status(500).send("Error in loading all categories, Please try again after sometime!");
     })
-} 
+}
 
 const fetchCategoryByID = (req, res) => {
     const categoryId = req.params.categoryId;
@@ -71,8 +71,22 @@ const fetchCategoryByID = (req, res) => {
         })
     })
 }
+
+const fetchCategoryByName = (req, res) => {
+    categoryRepository.fetchCategoriesByCriteria({
+        where: {
+            name: req.params.name
+        }
+    }).then(result => res.status(200).send(result))
+    .catch((error) => {
+        //1. name doesn't exist - client error
+        res.status(500)
+        .send({message: 'Error occured in processing the request. Please try aga in sometime!'})
+    })
+} 
 module.exports = {
-    create: createCategory,
+    addCategory: addCategory,
     fetchAllCategories: fetchAllCategories,
-    fetchCategoryByID: fetchCategoryByID
+    fetchCategoryByID: fetchCategoryByID,
+    fetchCategoryByName: fetchCategoryByName
 }
