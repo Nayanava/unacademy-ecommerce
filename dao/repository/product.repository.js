@@ -19,12 +19,12 @@ createProductTable = async (forceCreation) => {
     await Product.sync({force: forceCreation});
 }
 
-const createProduct = async(product) => {
+const addProduct = async(product) => {
     return await Product.create({
         name: product.name,
         description: product.description,
         imageUrl: product.imageUrl,
-        price: product.Price,
+        price: product.price,
         categoryId: product.categoryId
     });
 }
@@ -43,19 +43,14 @@ const fetchAllProducts = async() => {
 }
 
 //TODO:: implement this
-const fetchAllProductsByCategoryId = async(categoryId) => {
-
-}
-//TODO:: implement this
-const fetchProductByName = async(name) => {
-
+const fetchProductsByCriteria = async (criteria) => {
+    return await Product.findAll(criteria);
 }
 
 module.exports = {
     createProductTable: createProductTable,
-    createProduct: createProduct,
+    createProduct: addProduct,
     fetchAllProducts: fetchAllProducts,
-    fetchProductsByCategoryId: fetchAllProductsByCategoryId,
-    //productByName: fetchProductByName,
-    fetchProductById: fetchProductById
+    fetchProductById: fetchProductById,
+    fetchProductsByCriteria: fetchProductsByCriteria
 }
