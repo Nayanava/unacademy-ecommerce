@@ -100,8 +100,35 @@ const fetchProuctsByCategoryId = (req, res) => {
         .send({message: 'Error occured in proccessing the request, Please try again after sometime!'})
     });
 }
+
+const search = (req, res) => {
+    const keyword = req.query.search;
+    const keywords = keyword.split(' ');
+    const likeKeywords = [];
+    const criteria = {};
+    for(let i = 0; i < keywords.length; i++) {
+        likeKeywords[i] = {
+             name : {
+                 [Op.like]: `%${keywords[i]}%`
+             }
+        }
+    }
+    criteria.where = {
+        [Op.and]: likeKeywords
+    }
+    console.log(criteria);
+
+    productRepository.fetchProductsByCriteria(criteria)
+    .then(result => res.status(200).send(result))
+    .catch(error => {
+        console.log(error);
+        res.status(500)
+        .send({message: 'Error occured in proccessing the request, Please try again after sometime!'})
+    })
+}
 module.exports = {
     createProduct: createProduct,
     fetchProuctsByName: fetchProuctsByName,
-    fetchProuctsByCategoryId: fetchProuctsByCategoryId
+    fetchProuctsByCategoryId: fetchProuctsByCategoryId,
+    search: search
 }
