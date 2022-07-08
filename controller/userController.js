@@ -29,13 +29,20 @@ exports.login = (req, res) => {
             //     phoneNumber: req.body.phoneNumber
             // }]
         }
-    }).then(user => {
-        return authenticateUser(req.body.password, user.password);
+    }).then(async (user) => {
+        const isValidUser = await authenticateUser(req.body.password, user.password);
+        return isValidUser ? user: undefined
     }).then(result => {
         if(!result) {
             res.status(401).send('Invalid username or password');
             return;
         }
+        //call the authorization server - to get a new access token.
+        // this access token will be passed down to the server
+        // in all subsequent requests
+        console.log('result = ', result);
+        //create the payload and call the auth-server
+        //will return the access token.
         res.status(200).send({message: 'Login Successful!'});
     }).catch(err => {
         console.log(err);
