@@ -48,6 +48,7 @@ const fetchProductsByCriteria = async (criteria) => {
 }
 
 module.exports = {
+    Product: Product,
     createProductTable: createProductTable,
     createProduct: addProduct,
     fetchAllProducts: fetchAllProducts,

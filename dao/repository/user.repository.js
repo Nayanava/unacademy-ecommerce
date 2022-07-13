@@ -30,6 +30,7 @@ const fetchUserByCriteria = async(criteria) => {
     return await User.findOne(criteria);
 }
 module.exports = {
+    User: User,
     createUserTable: createUserTable,
     registerUser: registerUser,
     fetchUserByCriteria: fetchUserByCriteria

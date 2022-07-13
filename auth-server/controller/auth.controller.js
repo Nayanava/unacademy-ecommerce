@@ -27,7 +27,7 @@ exports.accessToken = (req, res) => {
     
 }
 
-exports.fetchNewAccessToken = (req, res) => {
+exports.refreshAccessToken = (req, res) => {
     //1. the expired access token - will have the username
     //2. the refreshToken
     const accessToken = req.body.accessToken;
@@ -41,11 +41,13 @@ exports.fetchNewAccessToken = (req, res) => {
     }).then(result => {
         if(result) {
             res.status(200).send({
-                accessToken: getAccessToken({username: decodedToken.username}),
+                accessToken: getAccessToken({username: decodedToken.username, 
+                    permission: decodedToken.permission}),
                 refreshToken: req.body.refreshToken
             })
+            return;
         }
-        res.status(401);
+        res.sendStatus(401);
     }).catch(err => {
         console.log('error occurred!', err);
         res.status(500).send({
@@ -54,7 +56,7 @@ exports.fetchNewAccessToken = (req, res) => {
     })
 }
 
-exports.authorize = (req, res) => {
+exports.validate = (req, res) => {
     {
         const authHeader = req.headers['authorization'];
         const accessToken = authHeader.split(' ')[1];
@@ -67,14 +69,17 @@ exports.authorize = (req, res) => {
                 res.sendStatus(403);
                 return;
             }
-            req.user = payload;
-            next();
+            console.log(`encoded token = `, accessToken);
+            const decodedToken = jwt.decode(accessToken);
+            console.log(`decoded token = `, decodedToken);
+            res.status(200).send(decodedToken);
         });
     }
 }
 function getRefreshToken() {
     return crypto.randomBytes(64).toString('hex');
 }
+
 
 function getAccessToken(payload) {
     const jitter = parseInt(Math.random()*120);
