@@ -26,39 +26,10 @@ exports.update = (req, res) => {
 
     Cart.findByPk(cartId).then(cart => {
         console.log(cart);
-        Product.findAll({
-            where: {
-                id: req.body.productIds
-            }
-        }).then(items => {
-            if (!items) {
-                res.status(400).send({
-                    message: "item trying to be added doesn't exist"
-                })
-            }
-            cart.setProducts(items).then(() => {
-                console.log("Products successfully added in the cart");
-                var cost = 0;
-                const productsSelected = [];
-                cart.getProducts().then(products => {
-                    for (i = 0; i < products.length; i++) {
-                        cost = cost + products[i].price;
-                        productsSelected.push({
-                            id: products[i].id,
-                            name: products[i].name,
-                            cost: products[i].price
-                        });
-                    }
-                    res.status(200).send({
-                        id: cart.id,
-                        productsSelected: productsSelected,
-                        cost: cost
-
-                    });
-                });
-            })
-        })
-
+        cart.addProduct(req.body.productId, {through: {quantity: req.body.quantity}})
+        .then((result) => {
+            res.status(200).send(result);
+        });
     })
 }
 
