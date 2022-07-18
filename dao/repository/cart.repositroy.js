@@ -1,17 +1,25 @@
 const { defineCart } = require("../models/cart.model");
+const { DataTypes } = require("./dbConnection");
 const dbConnection = require("./dbConnection");
 const { Product } = require("./product.repository");
 const { User } = require("./user.repository");
 
 const Cart = defineCart(dbConnection.connection, dbConnection.DataTypes);
+
 const createCartTable = async () => {
+    const CartProduct = dbConnection.connection.define('cart_product', {
+        'quantity': {
+            type: dbConnection.DataTypes.INTEGER,
+            allowNull: false,
+        },
+    })
    Product.belongsToMany(Cart, {
-        through: "cart_products",
+        through: "cart_product",
         foreignKey: "productId",
         otherKey: "cartId"
     });
     Cart.belongsToMany(Product, {
-        through: "cart_products",
+        through: "cart_product",
         foreignKey: "cartId",
         otherKey: "productId"
     });
@@ -20,6 +28,7 @@ const createCartTable = async () => {
     await Cart.sync();
     await User.sync();
     await Product.sync();
+
     dbConnection.connection.sync();
 }
 
