@@ -22,7 +22,7 @@ describe('Test all behaviours of ProductController.create', () => {
 
         await ProductController.createProduct(req, res);
 
-        console.log(res);
+        // console.log(res);
         await expect(spy).toHaveBeenCalled();
         expect(ProductRepository.createProduct).toHaveBeenCalledWith(newProduct);
         expect(res.status).toHaveBeenCalledWith(201);
@@ -51,7 +51,7 @@ describe('Test all behaviours of ProductController.create', () => {
     it('Should throws duplicate product name when ProductController.createProduct is called', async() => {
         req.body = newProduct;
         res = mockResponse();
-        console.log(newProduct);
+        // console.log(newProduct);
         const spy = jest.spyOn(ProductRepository, 'createProduct')
                     .mockImplementation(
                         (newProduct) => {
