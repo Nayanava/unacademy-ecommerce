@@ -1,0 +1,9 @@
+{
+    "username": "test",
+    "firstName": "John",
+    "lastName": "Doe",
+    "password": "123456",
+    "emailId": "test@ecom.com",
+    "phoneNumber": "1112223330",
+    "permission": "USER"
+}
