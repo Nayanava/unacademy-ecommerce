@@ -4,7 +4,7 @@
   "description": "//1. user -> register, login //2. products -> categories, sub-categories //3. order -> placing an order, status of order, track order, transaction //4. inventory management () //5. admin -> who will add categories, products to categories, stock of products. //6. shipping management -> (ecom, dtdc, professional, delhivery, bluedart, fedex) //7. payments -> (phonepe, billdesk, razorpay, gpay, upi)",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "",
