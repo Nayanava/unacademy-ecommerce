@@ -10,8 +10,8 @@ app.use(bodyParser.json());
 app.get("/", (req, res) => {
     res.send({message: "Welcome to our e-commerce Platform!"});
 })
-app.listen(serverConfig.PORT, serverConfig.HOST, () => {
-    console.log(`Server is listening on ${serverConfig.HOST}:${serverConfig.PORT}`);
+app.listen(serverConfig.PORT, () => {
+    console.log(`Server is listening on port: ${serverConfig.PORT}`);
 });
 
 //IIFE - immediately invoked function expression!
@@ -19,7 +19,5 @@ app.listen(serverConfig.PORT, serverConfig.HOST, () => {
     //1. configure the routers
     createRoutes(app);
     //2. Initialize the databases if environment is development
-    if(serverConfig.ENV === 'dev') {
-        initializeTables(false);
-    }
+    initializeTables(false);
 })();
